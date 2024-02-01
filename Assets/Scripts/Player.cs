@@ -4,16 +4,22 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float speed = 7.7f;
+    public float regularSpeed = 7.77f;
+    public float fastSpeed = 11.1f;
+    public float slowSpeed = 4.5f;
+    public float spherecast_radius = 0.5f;
+    public LayerMask walkable;
+
     CharacterController controller;
+    float speed = 7.7f;
+    float velocity_y;
+    bool grounded = true;
 
     private void Start()
     {
         controller = GetComponent<CharacterController>();
     }
 
-    float velocity_y;
-    bool grounded = true;
     void Update()
     {
         float inputx = Input.GetAxisRaw("Horizontal");
@@ -41,14 +47,26 @@ public class Player : MonoBehaviour
         controller.Move( Vector3.up * velocity_y * Time.deltaTime );
     }
 
-    public float spherecast_radius = 0.5f;
-    public LayerMask walkable;
     bool GroundCheck()
     {
         
         Vector3 startPos = transform.position + Vector3.down + Vector3.up * spherecast_radius;
         RaycastHit info;
-        return Physics.SphereCast(startPos, spherecast_radius, Vector3.down, out info, 0.2f, walkable);
+        bool isGrounded = Physics.SphereCast(startPos, spherecast_radius, Vector3.down, out info, 0.2f, walkable);
+
+        if (!isGrounded)
+            return false;
+
+        switch (info.collider.tag)
+        {
+            case "Fast": 
+                speed = fastSpeed; 
+                break;
+            case "Slow": speed = slowSpeed; break;
+            default: speed = regularSpeed; break;
+        }
+
+        return isGrounded;
     }
 
     private void OnDrawGizmosSelected()
