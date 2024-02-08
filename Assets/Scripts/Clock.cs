@@ -2,15 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum KeyColor { RedKey, GreenKey, GoldKey }
-
-public class Key : Pickup
+public class Clock : Pickup
 {
-    public KeyColor color;
+    public int timeToAdd = 10;
 
     protected override void Picked()
     {
         base.Picked();
-        GameManager.Instance.AddKey(color);
+        GameManager.Instance.AddTime(timeToAdd);
     }
 }
