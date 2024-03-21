@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    //Singleton
     public static GameManager Instance;
     private void Awake()
     {
@@ -39,6 +40,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //game time
     void Resume()
     {
         Time.timeScale = 1;
@@ -57,6 +59,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //Pickups
     public void PickDiamond()
     {
         diamonds++;
@@ -87,4 +90,35 @@ public class GameManager : MonoBehaviour
         CancelInvoke(nameof(Stopper));
         InvokeRepeating(nameof(Stopper), freezeTime, 1);
     }
+
+    //keys and doors
+    public bool HasKey(KeyColor keyColor)
+    {
+        switch (keyColor)
+        {
+            case KeyColor.RedKey:
+                return redKeys > 0;
+            case KeyColor.GreenKey:
+                return greenKeys > 0;
+            case KeyColor.GoldKey:
+                return goldKeys > 0;
+        }
+        return false;
+    }
+    public void UseKey(KeyColor keyColor)
+    {
+        switch (keyColor)
+        {
+            case KeyColor.RedKey:
+                redKeys--;
+                break;
+            case KeyColor.GreenKey:
+                greenKeys--;
+                break;
+            case KeyColor.GoldKey:
+                goldKeys--;
+                break;
+        }
+    }
+
 }
