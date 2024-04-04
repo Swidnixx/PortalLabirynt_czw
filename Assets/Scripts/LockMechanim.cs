@@ -8,6 +8,12 @@ public class LockMechanim : MonoBehaviour
     public KeyColor keyColor;
     bool playerInRange;
     bool alreadyOpen;
+    Animator animator;
+
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
 
     private void Update()
     {
@@ -20,11 +26,24 @@ public class LockMechanim : MonoBehaviour
 
                 if(!alreadyOpen)
                     GameManager.Instance.UseKey(keyColor);
-                alreadyOpen = true;
-
-                foreach (var d in doorsToOpen)
+                else
                 {
-                    d.open = !d.open;
+                    Open();
+                    return;
+                }
+
+                alreadyOpen = true;
+                switch (keyColor)
+                {
+                    case KeyColor.RedKey:
+                        animator.SetTrigger("openRed");
+                        break;
+                    case KeyColor.GreenKey:
+                        animator.SetTrigger("openGreen");
+                        break;
+                    case KeyColor.GoldKey:
+                        animator.SetTrigger("openGold");
+                        break;
                 }
             }
         }
@@ -43,6 +62,14 @@ public class LockMechanim : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInRange = false;
+        }
+    }
+
+    public void Open()
+    {
+        foreach (var d in doorsToOpen)
+        {
+            d.open = !d.open;
         }
     }
 }

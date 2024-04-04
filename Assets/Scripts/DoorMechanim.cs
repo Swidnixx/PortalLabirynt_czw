@@ -17,5 +17,7 @@ public class DoorMechanim : MonoBehaviour
     {
         Vector3 target_pos = open ? marker_open.position : marker_closed.position;
         door.position = Vector3.MoveTowards(door.position, target_pos, Time.deltaTime * speed);
+        Quaternion target_rot = open ? marker_open.rotation : marker_closed.rotation;
+        door.rotation = Quaternion.RotateTowards(door.rotation, target_rot, Time.deltaTime * speed * Mathf.Rad2Deg);
     }
 }
