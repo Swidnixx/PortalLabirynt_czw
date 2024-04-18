@@ -10,6 +10,8 @@ public class LockMechanim : MonoBehaviour
     bool alreadyOpen;
     Animator animator;
 
+    public AudioClip sfx;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -32,6 +34,7 @@ public class LockMechanim : MonoBehaviour
                     return;
                 }
 
+                SoundManager.Instance.PlaySFX(sfx);
                 alreadyOpen = true;
                 switch (keyColor)
                 {

@@ -60,6 +60,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
+  sfx: {fileID: 8300000, guid: 954018d0e43e5a142889fa1893027ea9, type: 3}
   timeToAdd: 10
 --- !u!1001 &7733176439198961345
 PrefabInstance:

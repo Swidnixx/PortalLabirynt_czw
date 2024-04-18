@@ -18,10 +18,14 @@ public class GameManager : MonoBehaviour
     //Game Time
     public int time = 60;
     bool paused;
+    bool freezed;
 
     //Pickups
     int diamonds;
     int redKeys, greenKeys, goldKeys;
+
+    //Sounds
+    public AudioClip freezeOff;
 
     private void Start()
     {
@@ -87,8 +91,20 @@ public class GameManager : MonoBehaviour
     }
     public void FreezeTime(int freezeTime)
     {
+        if(freezed)
+        {
+            CancelInvoke(nameof(Stopper));
+            CancelInvoke(nameof(FreezeOff));
+        }
+        freezed = true;
         CancelInvoke(nameof(Stopper));
         InvokeRepeating(nameof(Stopper), freezeTime, 1);
+        Invoke(nameof(FreezeOff), freezeTime);
+    }
+    void FreezeOff()
+    {
+        freezed = false;
+        SoundManager.Instance.PlaySFX(freezeOff);
     }
 
     //keys and doors
