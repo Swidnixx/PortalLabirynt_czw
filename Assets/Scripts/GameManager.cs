@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,20 +20,47 @@ public class GameManager : MonoBehaviour
     public int time = 60;
     bool paused;
     bool freezed;
+    bool over;
 
     //Pickups
     int diamonds;
     int redKeys, greenKeys, goldKeys;
+    public int Diamonds => diamonds;
+    public int RedKeys => redKeys;
+    public int GreenKeys => greenKeys;
+    public int GoldKeys => goldKeys;
 
     //Sounds
     public AudioClip freezeOff;
 
+    //UI
+    public GameObject pausePanel, winPanel, loosePanel;
+
     private void Start()
     {
         InvokeRepeating(nameof(Stopper), 3, 1);
+        pausePanel.SetActive(false);
+        winPanel.SetActive(false);
+        loosePanel.SetActive(false);
     }
     private void Update()
     {
+        if(over || paused)
+        {
+            if(Input.GetKeyDown(KeyCode.Q))
+            {
+                Application.Quit();
+            }
+            if(Input.GetKeyDown(KeyCode.R))
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                Time.timeScale = 1;
+            }
+
+            if(!paused)
+                return;
+        }
+
         if(Input.GetButtonDown("Cancel"))
         {
             if (paused)
@@ -48,19 +76,36 @@ public class GameManager : MonoBehaviour
     void Resume()
     {
         Time.timeScale = 1;
+        pausePanel.SetActive(false);
     }
     void Pause()
     {
         Time.timeScale = 0;
+        pausePanel.SetActive(true);
     }
     void Stopper()
     {
+        DisplayUI.Instance.ActivateFreeze(false);
         time--;
         if(time <= 0)
         {
             //Game over
-            CancelInvoke();
+            GameOver();
         }
+    }
+    public void GameWin()
+    {
+        CancelInvoke(nameof(Stopper));
+        Time.timeScale = 0;
+        over = true;
+        winPanel.SetActive(true);
+    }
+    public void GameOver()
+    {
+        CancelInvoke(nameof(Stopper));
+        Time.timeScale = 0;
+        over = true;
+        loosePanel.SetActive(true);
     }
 
     //Pickups
@@ -93,13 +138,13 @@ public class GameManager : MonoBehaviour
     {
         if(freezed)
         {
-            CancelInvoke(nameof(Stopper));
             CancelInvoke(nameof(FreezeOff));
         }
         freezed = true;
         CancelInvoke(nameof(Stopper));
         InvokeRepeating(nameof(Stopper), freezeTime, 1);
         Invoke(nameof(FreezeOff), freezeTime);
+        DisplayUI.Instance.ActivateFreeze(true);
     }
     void FreezeOff()
     {
