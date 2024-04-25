@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/LabiryntGeneration.unity
+    guid: 3cb94cb337ed31c4f98bc7dff31d9030
   m_configObjects: {}
